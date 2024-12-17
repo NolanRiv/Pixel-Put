@@ -1,9 +1,10 @@
 import AbstractManager from "./abstractManager.js";
+import Booster from "../components/booster.js";
 
 export default class BoosterManager extends AbstractManager {
-  constructor(boostersData) {
+  constructor(boostersData, assetsManager) {
     const boosters = boostersData.map(data =>
-      new booster(data.x, data.y, data.radius, data.bouncy || false)
+      new Booster(data.x, data.y, data.radius, data.boostFactor, assetsManager)
     );
     super(boosters); // Initialisation via AbstractManager
   }

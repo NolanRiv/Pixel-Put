@@ -2,9 +2,9 @@ import AbstractManager from "./abstractManager.js";
 import Obstacle from "../components/obstacle.js";
 
 export default class ObstacleManager extends AbstractManager {
-  constructor(obstaclesData) {
+  constructor(obstaclesData, assetsManager) {
     const obstacles = obstaclesData.map(data =>
-      new Obstacle(data.x, data.y, data.radius, data.bouncy || false)
+      new Obstacle(data.x, data.y, data.radius, data.bouncy || false, assetsManager)
     );
     super(obstacles);
   }

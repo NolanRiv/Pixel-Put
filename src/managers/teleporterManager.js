@@ -1,11 +1,17 @@
-import AbstractManager from "./abstractManager.js";
+import Teleporter from "../components/teleporter.js";
+import AbstractManager from "./abstractManager.js"
 
 export default class TeleporterManager extends AbstractManager {
-  constructor(teleportersData) {
+  constructor(teleportersData, assetsManager) {
     const teleporters = teleportersData.map(data =>
-      new teleporter(data.x, data.y, data.radius, data.bouncy || false)
+      new Teleporter(
+        data.entry.x, data.entry.y, // entryX et entryY
+        data.exit.x, data.exit.y,   // exitX et exitY
+        data.entry.radius,          // radius
+        assetsManager
+      )
     );
-    super(teleporters); // Initialisation via AbstractManager
+    super(teleporters);
   }
 
   applyTeleporters(players) {

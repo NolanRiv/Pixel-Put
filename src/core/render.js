@@ -20,11 +20,19 @@ export default class Renderer {
           yOffset += 20;
         });
         ctx.restore();
-      }                  
+      }    
+      
+    renderBackground() {
+      const bg = this.game.assetsManager.getImage("level_background");
+      if (bg) {
+        this.ctx.drawImage(bg, 0, 0, this.game.canvas.width, this.game.canvas.height);
+      }
+    }      
   
     render() {
       this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   
+      this.renderBackground();
       this.game.terrainManager.render(this.ctx);
       this.game.boosterManager.render(this.ctx);
       this.game.teleporterManager.render(this.ctx);

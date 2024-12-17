@@ -9,6 +9,7 @@ import CollisionManager from "../managers/collisionManager.js";
 import ObstacleManager from "../managers/obstacleManager.js";
 import Player from "../components/player.js";
 import VictoryScreen from "../scenes/victory.js";
+import AssetsManager from "../managers/assetsManager.js";
 
 export default class Game {
   constructor(container) {
@@ -41,6 +42,17 @@ export default class Game {
     this.canvas = document.getElementById("game-canvas");
     this.ctx = this.canvas.getContext("2d");
 
+    this.assetsManager = new AssetsManager();
+    await this.assetsManager.loadImages({
+      booster: "src/assets/images/booster.png",
+      bouncy: "src/assets/images/obstacle_bouncy.png",
+      level_background: "src/assets/images/level_background.png",
+      obstacle: "src/assets/images/obstacle.png",
+      sand: "src/assets/images/sand.png",
+      sticky: "src/assets/images/sticky.png",
+      teleporter: "src/assets/images/teleporter.png"
+    });
+
     // Initialisation du LevelManager et chargement du premier niveau
     this.levelManager = new LevelManager(3, "src/levels/");
     const levelData = await this.levelManager.loadCurrentLevel();
@@ -66,15 +78,18 @@ export default class Game {
       ];
     }
 
+
+
+    
     // Mise à jour des composants du jeu
     this.goal = levelData.goal;
     this.obstacles = levelData.obstacles || [];
     this.boosters = levelData.boosters || [];
     this.teleporters = levelData.teleporters || [];
     this.terrains = levelData.terrains || [];
-
+    
     // Initialisation des gestionnaires
-    this.obstacleManager = new ObstacleManager(this.obstacles);
+    this.obstacleManager = new ObstacleManager(this.obstacles, this.assetsManager);
     this.collisionManager = new CollisionManager(
       this.goal,
       this.players,
@@ -86,15 +101,15 @@ export default class Game {
       this.obstacleManager
     );
     this.playerManager = new PlayerManager(this.players, this.collisionManager, this.canvas.width, this.canvas.height);
-    this.terrainManager = new TerrainManager(this.terrains);
-    this.boosterManager = new BoosterManager(this.boosters);
-    this.teleporterManager = new TeleporterManager(this.teleporters);
-    this.renderer = new Renderer(this.ctx, this);
-
+    this.terrainManager = new TerrainManager(this.terrains, this.assetsManager, this.assetsManager);
+    this.boosterManager = new BoosterManager(this.boosters, this.assetsManager, this.assetsManager);
+    this.teleporterManager = new TeleporterManager(this.teleporters, this.assetsManager);
+    this.renderer = new Renderer(this.ctx, this, this.assetsManager);
+    
     // Callback pour gérer la fin du niveau
     this.playerManager.levelCompleteCallback = () => this.loadNextLevel();
   }
-
+  
   async loadNextLevel() {
     const levelData = await this.levelManager.loadNextLevel();
     if (levelData) {

@@ -2,9 +2,9 @@ import AbstractManager from "./abstractManager.js";
 import Terrain from "../components/terrain.js";
 
 export default class TerrainManager extends AbstractManager {
-  constructor(terrainsData) {
+  constructor(terrainsData, assetsManager) {
     const terrains = terrainsData.map(data =>
-      new Terrain(data.type, data.x, data.y, data.width, data.height, data.properties)
+      new Terrain(data.type, data.x, data.y, data.width, data.height, data.properties, assetsManager)
     );
     super(terrains);
   }

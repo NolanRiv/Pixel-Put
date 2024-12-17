@@ -1,9 +1,13 @@
+import AssetsManager from "../managers/assetsManager.js";
+
 export default class Booster {
-    constructor(x, y, radius, boostFactor = 1.5) {
+    constructor(x, y, radius, boostFactor = 1.5, assetsManager) {
       this.x = x;             // Position X
       this.y = y;             // Position Y
       this.radius = radius;   // Rayon
       this.boostFactor = boostFactor; // Facteur de boost
+
+      this.image = assetsManager.getImage("booster");
     }
   
     // Applique l'effet de boost sur un joueur
@@ -14,12 +18,22 @@ export default class Booster {
   
     // Rendu du booster
     render(ctx) {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "green";
-      ctx.fill();
-      ctx.strokeStyle = "darkgreen";
-      ctx.stroke();
-      ctx.closePath();
+      if (this.image) {
+        ctx.drawImage(
+          this.image,
+          this.x - this.radius,
+          this.y - this.radius,
+          this.radius * 2,
+          this.radius * 2
+        );
+      } else {
+        // Rendu par défaut en cas d'absence d'image
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "darkgreen";
+        ctx.fill();
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+      }
     }
   }  
