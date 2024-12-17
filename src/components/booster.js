@@ -14,6 +14,9 @@ export default class Booster {
     applyEffect(player) {
       player.vx *= this.boostFactor;
       player.vy *= this.boostFactor;
+      
+      const sound = this.assetsManager.getSound("booster");
+      if (sound) sound.play();
     }
   
     // Rendu du booster

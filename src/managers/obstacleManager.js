@@ -7,6 +7,7 @@ export default class ObstacleManager extends AbstractManager {
       new Obstacle(data.x, data.y, data.radius, data.bouncy || false, assetsManager)
     );
     super(obstacles);
+    this.assetsManager = assetsManager;
   }
 
   // Vérification des collisions avec un joueur
@@ -30,6 +31,7 @@ export default class ObstacleManager extends AbstractManager {
         player.vy = -player.vy * reboundFactor;
 
         console.log(`Collision avec un obstacle ${obstacle.bouncy ? "rebondissant" : "normal"} !`);
+        this.assetsManager.getSound("hit");
       }
     });
   }

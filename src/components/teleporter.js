@@ -11,6 +11,9 @@ export default class Teleporter {
       player.y = this.exit.y;
       player.vx *= 0.5;
       player.vy *= 0.5;
+
+      const sound = this.assetsManager.getSound("teleporter");
+      if (sound) sound.play();
     }
   
   // Rendu du téléporteur

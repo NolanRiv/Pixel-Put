@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const game = new GameModule.default(container);
       game.start();
     });
+    // import("../managers/assetsManager.js").then( () => {
+    //   const music = this.assetsManager.getSound("menu_music");
+    //   if (music) music.play();
+    // });
   });
 
   // Bouton pour les instructions

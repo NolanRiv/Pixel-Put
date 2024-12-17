@@ -1,10 +1,11 @@
 export default class InputHandler {
-    constructor(canvas, onShootCallback) {
+    constructor(canvas, onShootCallback, assetsManager) {
       this.canvas = canvas;
       this.isDragging = false;
       this.startX = 0;
       this.startY = 0;
       this.onShoot = onShootCallback;
+      this.assetsManager = assetsManager;
   
       // Écouteurs d'événements souris
       this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
@@ -39,7 +40,13 @@ export default class InputHandler {
         const power = Math.min(Math.sqrt(dx * dx + dy * dy) / 5, 20); // Limite la puissance à 10
   
         this.onShoot(angle, power);
+        this.playSound("shoot");
       }
+    }
+
+    playSound(soundName) {
+      const sound = this.assetsManager.getSound(soundName);
+      if (sound) sound.play();
     }
   
     drawLine(x1, y1, x2, y2) {

@@ -26,6 +26,7 @@ export default class Game {
     this.boosterManager = null;
     this.teleporterManager = null;
     this.renderer = null;
+    this.assetsManager = new AssetsManager();
 
     // Éléments de jeu
     this.players = [];
@@ -34,9 +35,17 @@ export default class Game {
     this.boosters = [];
     this.teleporters = [];
     this.terrains = [];
+
+    this.backgroundMusic = null;
   }
 
   async start() {
+    if (this.assetsManager.getSound("game_music")) {
+      this.backgroundMusic = this.assetsManager.getSound("game_music");
+      this.backgroundMusic.loop = true;
+      this.backgroundMusic.play();
+    }
+    
     // Création du canvas
     this.container.innerHTML = `<canvas id="game-canvas" width="800" height="600"></canvas>`;
     this.canvas = document.getElementById("game-canvas");
@@ -52,6 +61,16 @@ export default class Game {
       sticky: "src/assets/images/sticky.png",
       teleporter: "src/assets/images/teleporter.png"
     });
+    await this.assetsManager.loadSounds({
+      booster: "src/assets/sounds/booster.mp3",
+      game_music: "src/assets/sounds/game_music.mp3",
+      goal: "src/assets/sounds/goal.mp3",
+      hit: "src/assets/sounds/hit.mp3",
+      menu_music: "src/assets/sounds/menu_music.mp3",
+      shoot: "src/assets/sounds/shoot.mp3",
+      teleporter: "src/assets/sounds/teleporter.mp3",
+      victory: "src/assets/sounds/victory.mp3",
+    }),
 
     // Initialisation du LevelManager et chargement du premier niveau
     this.levelManager = new LevelManager(3, "src/levels/");
@@ -98,7 +117,8 @@ export default class Game {
       this.terrains,
       this.canvas.width,
       this.canvas.height,
-      this.obstacleManager
+      this.obstacleManager,
+      this.assetsManager
     );
     this.playerManager = new PlayerManager(this.players, this.collisionManager, this.canvas.width, this.canvas.height);
     this.terrainManager = new TerrainManager(this.terrains, this.assetsManager, this.assetsManager);
@@ -123,7 +143,7 @@ export default class Game {
   attachInputHandler() {
     new InputHandler(this.canvas, (angle, power) => {
       this.playerManager.handlePlayerShot(angle, power);
-    });
+    }, this.assetsManager);
   }
 
   update() {

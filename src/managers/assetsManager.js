@@ -1,6 +1,7 @@
 export default class AssetsManager {
     constructor() {
       this.images = {};
+      this.sounds = {};
     }
   
     loadImages(imagePaths) {
@@ -21,4 +22,29 @@ export default class AssetsManager {
     getImage(name) {
       return this.images[name];
     }
+
+    loadSounds(soundPaths) {
+      return Promise.all(
+        Object.entries(soundPaths).map(([key, path]) => {
+          return new Promise(resolve => {
+            const audio = new Audio();
+            audio.src = path;
+            audio.oncanplaythrough = () => {
+              this.sounds[key] = audio;
+              resolve();
+            };
+          });
+        })
+      );
+    }
+
+    getSound(name) {
+      return this.sounds[name];
+    }
+
+    setGlobalVolume(volume) {
+      Object.values(this.sounds).forEach(sound => {
+        sound.volume = volume;
+      });
+    }    
   }  

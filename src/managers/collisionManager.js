@@ -1,5 +1,5 @@
 export default class CollisionManager {
-  constructor(goal, players = [], boosters = [], teleporters = [], terrains = [], canvasWidth = 800, canvasHeight = 600, obstacleManager) {
+  constructor(goal, players = [], boosters = [], teleporters = [], terrains = [], canvasWidth = 800, canvasHeight = 600, obstacleManager, assetsManager) {
     this.goal = goal;
     this.players = players;
     this.boosters = boosters;
@@ -8,6 +8,7 @@ export default class CollisionManager {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.obstacleManager = obstacleManager;
+    this.assetsManager = assetsManager;
   }
 
   checkWallCollision(player) {
@@ -30,6 +31,7 @@ export default class CollisionManager {
       if (this.isColliding(player, booster)) {
         player.vx *= booster.boostFactor;
         player.vy *= booster.boostFactor;
+        this.playSound("booster");
         console.log(`${player.color} a été boosté !`);
       }
     });
@@ -40,6 +42,7 @@ export default class CollisionManager {
       if (this.isColliding(player, teleporter.entry)) {
         player.x = teleporter.exit.x;
         player.y = teleporter.exit.y;
+        this.playSound("teleporter");
         console.log(`${player.color} a été téléporté !`);
       }
     });
@@ -83,6 +86,7 @@ export default class CollisionManager {
       otherPlayer.vx -= Math.cos(angle) * impulse;
       otherPlayer.vy -= Math.sin(angle) * impulse;
   
+      this.playSound("hit");
       console.log("Collision entre deux balles !");
     }
   }  
@@ -91,6 +95,7 @@ export default class CollisionManager {
     if (this.isColliding(player, this.goal)) {
       player.vx = 0; player.vy = 0;
       player.finished = true; player.visible = false;
+      this.playSound("goal");
       console.log(`${player.color} a atteint le goal !`);
       return true;
     }
@@ -99,6 +104,11 @@ export default class CollisionManager {
 
   checkObstacleCollision(player) {
     this.obstacleManager.checkCollisions(player);
+  }
+
+  playSound(soundName) {
+    const sound = this.assetsManager.getSound(soundName);
+    if (sound) sound.play();
   }
 
   getDistance(a, b) {
