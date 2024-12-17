@@ -1,0 +1,10 @@
+{
+  "start": { "x": 100, "y": 500 },
+  "goal": { "x": 700, "y": 100, "radius": 15 },
+  "obstacles": [],
+  "boosters": [],
+  "teleporters": [],
+  "terrains": [
+    { "type": "wind", "x": 400, "y": 200, "width": 200, "height": 100, "forceX": 0, "forceY": -0.5 }
+  ]
+}

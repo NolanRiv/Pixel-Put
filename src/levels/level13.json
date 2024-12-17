@@ -1,0 +1,11 @@
+{
+  "start": { "x": 100, "y": 300 },
+  "goal": { "x": 700, "y": 300, "radius": 15 },
+  "obstacles": [],
+  "boosters": [],
+  "teleporters": [],
+  "terrains": [
+    { "type": "sand", "x": 250, "y": 250, "width": 100, "height": 100 },
+    { "type": "sticky", "x": 450, "y": 250, "width": 100, "height": 100 }
+  ]
+}

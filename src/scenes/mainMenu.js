@@ -1,34 +1,27 @@
-import Instructions from "./instructions.js";
-import Game from "../core/game.js";
+document.addEventListener("DOMContentLoaded", () => {
+  const mainMenu = document.createElement("div");
+  mainMenu.id = "main-menu";
+  mainMenu.className = "menu-screen";
+  mainMenu.innerHTML = `
+    <h1>Golf Pixel Put</h1>
+    <button id="start-button">Commencer</button>
+    <button id="instructions-button">Instructions</button>
+  `;
+  document.body.appendChild(mainMenu);
 
-export default class MainMenu {
-  constructor(container) {
-    this.container = container;
-  }
-
-  load() {
-    this.container.innerHTML = `
-      <div id="main-menu">
-        <h1>Pixel Put</h1>
-        <button id="start-btn">Commencer</button>
-        <button id="instructions-btn">Instructions</button>
-      </div>
-    `;
-
-    document.getElementById("start-btn").addEventListener("click", () => {
-      const game = new Game(this.container);
+  // Bouton pour commencer le jeu
+  document.getElementById("start-button").addEventListener("click", () => {
+    mainMenu.style.display = "none";
+    const container = document.getElementById("game-container");
+    import("../core/game.js").then(GameModule => {
+      const game = new GameModule.default(container);
       game.start();
     });
+  });
 
-    document.getElementById("instructions-btn").addEventListener("click", () => {
-      const instructions = new Instructions(this.container);
-      instructions.display();
-    });
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("game-container");
-  const menu = new MainMenu(container);
-  menu.load();
+  // Bouton pour les instructions
+  document.getElementById("instructions-button").addEventListener("click", () => {
+    mainMenu.style.display = "none";
+    document.getElementById("instructions").style.display = "flex";
+  });
 });
