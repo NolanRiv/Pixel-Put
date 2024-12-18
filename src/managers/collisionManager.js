@@ -11,13 +11,26 @@ export default class CollisionManager {
     this.assetsManager = assetsManager;
   }
 
+
   checkWallCollision(player) {
     const radius = player.radius || 10;
 
-    if (player.x - radius < 0) this.handleWallBounce(player, "x", radius);
-    if (player.x + radius > this.canvasWidth) this.handleWallBounce(player, "x", this.canvasWidth - radius);
-    if (player.y - radius < 0) this.handleWallBounce(player, "y", radius);
-    if (player.y + radius > this.canvasHeight) this.handleWallBounce(player, "y", this.canvasHeight - radius);
+    if (player.x - radius < 0) {
+      this.handleWallBounce(player, "x", radius);
+      this.playSound("hit");
+    }
+    if (player.x + radius > this.canvasWidth) {
+      this.handleWallBounce(player, "x", this.canvasWidth - radius);
+      this.playSound("hit");
+    }
+    if (player.y - radius < 0) {
+      this.handleWallBounce(player, "y", radius);
+      this.playSound("hit");
+    }
+    if (player.y + radius > this.canvasHeight) {
+      this.handleWallBounce(player, "y", this.canvasHeight - radius);
+      this.playSound("hit");
+    }
   }
 
   handleWallBounce(player, axis, limit) {

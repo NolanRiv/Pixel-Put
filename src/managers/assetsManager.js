@@ -42,6 +42,14 @@ export default class AssetsManager {
       return this.sounds[name];
     }
 
+    stopSound(soundName) {
+      const sound = this.sounds[soundName];
+      if (sound) {
+        sound.pause();
+        sound.currentTime = 0;
+      }
+    }    
+
     setGlobalVolume(volume) {
       Object.values(this.sounds).forEach(sound => {
         sound.volume = volume;

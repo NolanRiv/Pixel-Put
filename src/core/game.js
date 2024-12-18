@@ -40,17 +40,12 @@ export default class Game {
   }
 
   async start() {
-    if (this.assetsManager.getSound("game_music")) {
-      this.backgroundMusic = this.assetsManager.getSound("game_music");
-      this.backgroundMusic.loop = true;
-      this.backgroundMusic.play();
-    }
     
     // Création du canvas
     this.container.innerHTML = `<canvas id="game-canvas" width="800" height="600"></canvas>`;
     this.canvas = document.getElementById("game-canvas");
     this.ctx = this.canvas.getContext("2d");
-
+    
     this.assetsManager = new AssetsManager();
     await this.assetsManager.loadImages({
       booster: "src/assets/images/booster.png",
@@ -70,10 +65,19 @@ export default class Game {
       shoot: "src/assets/sounds/shoot.mp3",
       teleporter: "src/assets/sounds/teleporter.mp3",
       victory: "src/assets/sounds/victory.mp3",
-    }),
+    });
+    
+    const gameMusic = this.assetsManager.getSound("game_music");
+    if (gameMusic) {
+      gameMusic.loop = true;
+      gameMusic.volume = 0.1;
+      gameMusic.play();
+    } else {
+      console.error("Impossible de trouver la musique de fond !");
+    }
 
     // Initialisation du LevelManager et chargement du premier niveau
-    this.levelManager = new LevelManager(3, "src/levels/");
+    this.levelManager = new LevelManager(1, "src/levels/");
     const levelData = await this.levelManager.loadCurrentLevel();
     if (levelData) {
       this.initializeGame(levelData);
