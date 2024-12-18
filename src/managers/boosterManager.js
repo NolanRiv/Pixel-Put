@@ -6,7 +6,8 @@ export default class BoosterManager extends AbstractManager {
     const boosters = boostersData.map(data =>
       new Booster(data.x, data.y, data.radius, data.boostFactor, assetsManager)
     );
-    super(boosters); // Initialisation via AbstractManager
+    super(boosters); 
+    this.assetsManager = assetsManager;
   }
 
   applyBoosters(players) {

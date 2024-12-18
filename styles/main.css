@@ -144,26 +144,39 @@ body{
 }
 
 #victory-screen table {
-  width: 100%;
-  margin-top: 20px;
+  width: 90%; /* Ajuste la largeur du tableau */
+  margin: auto; /* Centre le tableau horizontalement */
   border-collapse: collapse;
-  color: #fff;
+  table-layout: fixed; /* Force une répartition égale des colonnes */
 }
 
 #victory-screen th, #victory-screen td {
-  border: 1px solid #666;
-  padding: 10px;
+  padding: 10px; /* Espacement intérieur */
   text-align: center;
+  word-wrap: break-word; /* Empêche les débordements */
+  font-size: 14px; /* Réduit légèrement la taille du texte */
 }
 
 #victory-screen th {
   background-color: #444;
-  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
 }
 
 #victory-screen td {
   background-color: #222;
+  color: #ddd;
 }
+
+#victory-screen {
+  max-width: 800px; /* Limite la largeur totale */
+  margin: auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
 
 #restart-button {
   margin-top: 20px;

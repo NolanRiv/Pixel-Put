@@ -1,5 +1,3 @@
-import AssetsManager from "../managers/assetsManager.js";
-
 export default class Booster {
     constructor(x, y, radius, boostFactor = 1.5, assetsManager) {
       this.x = x;             // Position X
@@ -7,6 +5,7 @@ export default class Booster {
       this.radius = radius;   // Rayon
       this.boostFactor = boostFactor; // Facteur de boost
 
+      this.assetsManager = assetsManager;
       this.image = assetsManager.getImage("booster");
     }
   

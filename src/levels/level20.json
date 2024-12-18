@@ -1,18 +1,32 @@
 {
-  "start": { "x": 100, "y": 500 },
-  "goal": { "x": 700, "y": 100, "radius": 15 },
+  "start": { "x": 100, "y": 100 },
+  "goal": { "x": 700, "y": 500, "radius": 20 },
   "obstacles": [
-    { "x": 350, "y": 350, "radius": 30, "bouncy": true },
-    { "x": 550, "y": 200, "radius": 40 }
+    { "x": 400, "y": 300, "radius": 100, "type": "bouncy" },
+    { "x": 300, "y": 400, "radius": 50 },
+    { "x": 500, "y": 200, "radius": 50 }
   ],
   "boosters": [
-    { "x": 200, "y": 400, "radius": 20, "boostFactor": 1.5 }
+    { "x": 150, "y": 150, "radius": 20, "boostFactor": 2.5 },
+    { "x": 600, "y": 450, "radius": 20, "boostFactor": 2.0 }
   ],
   "teleporters": [
-    { "entry": { "x": 300, "y": 500, "radius": 15 }, "exit": { "x": 600, "y": 200 } }
+    { "entry": { "x": 100, "y": 500 }, "exit": { "x": 700, "y": 100 } }
   ],
   "terrains": [
-    { "type": "sand", "x": 400, "y": 300, "width": 150, "height": 50 },
-    { "type": "sticky", "x": 500, "y": 400, "width": 100, "height": 50 }
+    {
+      "x": 250,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "type": "sticky"
+    },
+    {
+      "x": 500,
+      "y": 350,
+      "width": 150,
+      "height": 100,
+      "type": "sand"
+    }
   ]
 }
