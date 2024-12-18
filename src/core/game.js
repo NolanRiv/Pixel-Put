@@ -77,7 +77,7 @@ export default class Game {
     }
 
     // Initialisation du LevelManager et chargement du premier niveau
-    this.levelManager = new LevelManager(1, "src/levels/");
+    this.levelManager = new LevelManager(20, "src/levels/");
     const levelData = await this.levelManager.loadCurrentLevel();
     if (levelData) {
       this.initializeGame(levelData);
