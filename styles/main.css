@@ -1,0 +1,229 @@
+body{
+  background-color: #444;
+}
+
+#game-container {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  margin: auto;
+  background: url('../src/assets/images/menu_background.png') no-repeat center center/cover;
+  border: 2px solid #444;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#main-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 10;
+}
+
+#main-menu h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 64px;
+  color: #fff;
+  margin-bottom: 30px;
+  text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#main-menu button {
+  margin: 15px;
+  padding: 15px 30px;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(to bottom, #4caf50, #388e3c);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+#main-menu button:hover {
+  background: linear-gradient(to bottom, #66bb6a, #43a047);
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+#instructions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('../assets/images/menu_background.png') no-repeat center center/cover;
+  z-index: 10;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+#main-container {
+  background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: white;
+}
+
+#instructions-container {
+  background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: white;
+}
+
+#instructions-container h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#instructions-container p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+#instructions-container button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: linear-gradient(to bottom, #4caf50, #388e3c);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+#instructions-container button:hover {
+  background: linear-gradient(to bottom, #66bb6a, #43a047);
+  transform: scale(1.1);
+}
+
+#victory-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+#victory-screen h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  color: gold;
+  margin-bottom: 20px;
+  text-shadow: 0px 4px 10px rgba(255, 215, 0, 0.5);
+}
+
+#victory-screen table {
+  width: 90%; /* Ajuste la largeur du tableau */
+  margin: auto; /* Centre le tableau horizontalement */
+  border-collapse: collapse;
+  table-layout: fixed; /* Force une répartition égale des colonnes */
+}
+
+#victory-screen th, #victory-screen td {
+  padding: 10px; /* Espacement intérieur */
+  text-align: center;
+  word-wrap: break-word; /* Empêche les débordements */
+  font-size: 14px; /* Réduit légèrement la taille du texte */
+}
+
+#victory-screen th {
+  background-color: #444;
+  color: #fff;
+  font-weight: bold;
+}
+
+#victory-screen td {
+  background-color: #222;
+  color: #ddd;
+}
+
+#victory-screen {
+  max-width: 800px; /* Limite la largeur totale */
+  margin: auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+
+#restart-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  background: linear-gradient(to bottom, #4caf50, #388e3c);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+#restart-button:hover {
+  background: linear-gradient(to bottom, #66bb6a, #43a047);
+  transform: scale(1.1);
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+  }
+  to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+  }
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+/* Animation de disparition */
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
+}

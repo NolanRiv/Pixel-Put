@@ -36,7 +36,7 @@ export default class InputHandler {
         const dy = endY - this.startY;
   
         const angle = Math.atan2(dy, dx);
-        const power = Math.min(Math.sqrt(dx * dx + dy * dy) / 10, 10); // Limite la puissance à 10
+        const power = Math.min(Math.sqrt(dx * dx + dy * dy) / 5, 20); // Limite la puissance à 10
   
         this.onShoot(angle, power);
       }

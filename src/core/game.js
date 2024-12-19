@@ -1,7 +1,15 @@
-import LevelManager from "./levelManager.js";
 import InputHandler from "./InputHandler.js";
-import CollisionManager from "./collisionManager.js";
-import PlayerManager from "./playerManager.js";
+import LevelManager from "../managers/levelManager.js";
+import Renderer from "./render.js";
+import PlayerManager from "../managers/playerManager.js";
+import TerrainManager from "../managers/terrainManager.js";
+import BoosterManager from "../managers/boosterManager.js";
+import TeleporterManager from "../managers/teleporterManager.js";
+import CollisionManager from "../managers/collisionManager.js";
+import ObstacleManager from "../managers/obstacleManager.js";
+import Player from "../components/player.js";
+import VictoryScreen from "../scenes/victory.js";
+import AssetsManager from "../managers/assetsManager.js";
 
 export default class Game {
   constructor(container) {
@@ -9,177 +17,167 @@ export default class Game {
     this.canvas = null;
     this.ctx = null;
 
-    this.levelManager = new LevelManager(); // Gestionnaire des niveaux
-    this.collisionManager = null; // Gestionnaire de collisions
-    this.playerManager = null; // Gestionnaire des joueurs
+    // Gestionnaires principaux
+    this.levelManager = null;
+    this.obstacleManager = null;
+    this.collisionManager = null;
+    this.playerManager = null;
+    this.terrainManager = null;
+    this.boosterManager = null;
+    this.teleporterManager = null;
+    this.renderer = null;
+    this.assetsManager = new AssetsManager();
 
+    // Éléments de jeu
     this.players = [];
     this.goal = null;
     this.obstacles = [];
     this.boosters = [];
     this.teleporters = [];
     this.terrains = [];
+
+    this.backgroundMusic = null;
   }
 
-  // Démarrage du jeu
   async start() {
+    
+    // Création du canvas
     this.container.innerHTML = `<canvas id="game-canvas" width="800" height="600"></canvas>`;
     this.canvas = document.getElementById("game-canvas");
     this.ctx = this.canvas.getContext("2d");
+    
+    this.assetsManager = new AssetsManager();
+    await this.assetsManager.loadImages({
+      booster: "src/assets/images/booster.png",
+      bouncy: "src/assets/images/obstacle_bouncy.png",
+      level_background: "src/assets/images/level_background.png",
+      obstacle: "src/assets/images/obstacle.png",
+      sand: "src/assets/images/sand.png",
+      sticky: "src/assets/images/sticky.png",
+      teleporter: "src/assets/images/teleporter.png"
+    });
+    await this.assetsManager.loadSounds({
+      booster: "src/assets/sounds/booster.mp3",
+      game_music: "src/assets/sounds/game_music.mp3",
+      goal: "src/assets/sounds/goal.mp3",
+      hit: "src/assets/sounds/hit.mp3",
+      menu_music: "src/assets/sounds/menu_music.mp3",
+      shoot: "src/assets/sounds/shoot.mp3",
+      teleporter: "src/assets/sounds/teleporter.mp3",
+      victory: "src/assets/sounds/victory.mp3",
+    });
+    
+    const gameMusic = this.assetsManager.getSound("game_music");
+    if (gameMusic) {
+      gameMusic.loop = true;
+      gameMusic.volume = 0.1;
+      gameMusic.play();
+    } else {
+      console.error("Impossible de trouver la musique de fond !");
+    }
 
+    // Initialisation du LevelManager et chargement du premier niveau
+    this.levelManager = new LevelManager(20, "src/levels/");
     const levelData = await this.levelManager.loadCurrentLevel();
-    if (!levelData) {
-      console.error("Erreur : Aucun niveau à charger !");
-      return;
+    if (levelData) {
+      this.initializeGame(levelData);
+      this.attachInputHandler();
+      this.loop();
+    } else {
+      console.error("Impossible de charger le premier niveau.");
     }
-
-    this.initializeGame(levelData);
-    this.attachInputHandler();
-    this.loop();
   }
 
-  // Chargement du niveau suivant
-  async loadNextLevel() {
-    console.log("Passage au niveau suivant...");
-    const levelData = await this.levelManager.loadNextLevel();
-    if (!levelData) {
-      console.log("Fin des niveaux !");
-      this.showVictoryScreen();
-      return;
-    }
-    this.initializeGame(levelData);
-  }
-
-  // Initialisation des paramètres pour un niveau
   initializeGame(levelData) {
-    if (!levelData || !levelData.start) {
-      console.error("Erreur : Données de niveau invalides !");
-      return;
+    console.log(`Initialisation du niveau : ${this.levelManager.currentLevelIndex + 1}`);
+
+    if (this.players.length > 0) {
+      this.playerManager.resetPlayers(levelData.start);
+    } else {
+      // Création initiale des joueurs uniquement si le tableau est vide
+      this.players = [
+        new Player(levelData.start.x, levelData.start.y, "red", 10),
+        new Player(levelData.start.x, levelData.start.y + 50, "blue", 10)
+      ];
     }
 
-    // Création des joueurs (balles)
-    this.players = [
-      { x: levelData.start.x, y: levelData.start.y, color: "red", vx: 0, vy: 0, visible: true, finished: false },
-      { x: levelData.start.x, y: levelData.start.y + 50, color: "blue", vx: 0, vy: 0, visible: true, finished: false }
-    ];
 
-    // Initialisation des composants
+
+    
+    // Mise à jour des composants du jeu
     this.goal = levelData.goal;
     this.obstacles = levelData.obstacles || [];
     this.boosters = levelData.boosters || [];
     this.teleporters = levelData.teleporters || [];
     this.terrains = levelData.terrains || [];
-    this.collisionManager = new CollisionManager(this.goal, this.players, this.obstacles, this.boosters, this.teleporters, this.terrains, this.canvas.width, this.canvas.height);
-
-    // Gestionnaire des joueurs
-    this.playerManager = new PlayerManager(this.players, this.collisionManager);
-    this.playerManager.resetPlayers(levelData.start);
-
-    // Définir une callback pour passer au niveau suivant
+    
+    // Initialisation des gestionnaires
+    this.obstacleManager = new ObstacleManager(this.obstacles, this.assetsManager);
+    this.collisionManager = new CollisionManager(
+      this.goal,
+      this.players,
+      this.boosters,
+      this.teleporters,
+      this.terrains,
+      this.canvas.width,
+      this.canvas.height,
+      this.obstacleManager,
+      this.assetsManager
+    );
+    this.playerManager = new PlayerManager(this.players, this.collisionManager, this.canvas.width, this.canvas.height);
+    this.terrainManager = new TerrainManager(this.terrains, this.assetsManager, this.assetsManager);
+    this.boosterManager = new BoosterManager(this.boosters, this.assetsManager, this.assetsManager);
+    this.teleporterManager = new TeleporterManager(this.teleporters, this.assetsManager);
+    this.renderer = new Renderer(this.ctx, this, this.assetsManager);
+    
+    // Callback pour gérer la fin du niveau
     this.playerManager.levelCompleteCallback = () => this.loadNextLevel();
   }
+  
+  async loadNextLevel() {
+    const levelData = await this.levelManager.loadNextLevel();
+    if (levelData) {
+      this.initializeGame(levelData);
+    } else {
+      console.log("Fin des niveaux !");
+      this.showVictoryScreen();
+    }
+  }
 
-  // Gestion des entrées
   attachInputHandler() {
     new InputHandler(this.canvas, (angle, power) => {
       this.playerManager.handlePlayerShot(angle, power);
-    });
+    }, this.assetsManager);
   }
 
-  // Mise à jour du jeu
   update() {
+    // Mise à jour des joueurs et gestion des collisions
     this.playerManager.updatePlayers();
-  }
 
-  // Affichage des éléments graphiques
-  render() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Goal
-    this.ctx.beginPath();
-    this.ctx.arc(this.goal.x, this.goal.y, this.goal.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = "black";
-    this.ctx.fill();
-
-    // Obstacles
-    this.obstacles.forEach(obstacle => {
-      this.ctx.beginPath();
-      this.ctx.arc(obstacle.x, obstacle.y, obstacle.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = "gray";
-      this.ctx.fill();
-    });
-
-      // Boosters
-    this.boosters.forEach(booster => {
-      this.ctx.beginPath();
-      this.ctx.arc(booster.x, booster.y, booster.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = "green"; // Couleur pour les boosters
-      this.ctx.fill();
-      this.ctx.strokeStyle = "darkgreen";
-      this.ctx.stroke();
-    });
-
-    // Téléporteurs (entrée et sortie)
-    this.teleporters.forEach(teleporter => {
-      // Entrée du téléporteur
-      this.ctx.beginPath();
-      this.ctx.arc(teleporter.entry.x, teleporter.entry.y, teleporter.entry.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = "blue";
-      this.ctx.fill();
-      this.ctx.strokeStyle = "darkblue";
-      this.ctx.stroke();
-
-      // Sortie du téléporteur
-      this.ctx.beginPath();
-      this.ctx.arc(teleporter.exit.x, teleporter.exit.y, teleporter.entry.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = "purple";
-      this.ctx.fill();
-      this.ctx.strokeStyle = "darkpurple";
-      this.ctx.stroke();
-    });
-
-    this.terrains.forEach(terrain => {
-      this.ctx.fillStyle = terrain.type === "sand" ? "yellow" :
-                           terrain.type === "sticky" ? "brown" :
-                           terrain.type === "wind" ? "lightblue" : "green";
-    
-      this.ctx.fillRect(terrain.x, terrain.y, terrain.width, terrain.height);
-    });
-    
-    // Obstacles rebondissants
-    this.obstacles.forEach(obstacle => {
-      this.ctx.beginPath();
-      this.ctx.arc(obstacle.x, obstacle.y, obstacle.radius, 0, Math.PI * 2);
-      this.ctx.fillStyle = obstacle.bouncy ? "orange" : "gray";
-      this.ctx.fill();
-    });
-
-    // Joueurs (balles)
     this.players.forEach(player => {
-      if (player.visible) {
-        this.ctx.beginPath();
-        this.ctx.arc(player.x, player.y, 10, 0, Math.PI * 2);
-        this.ctx.fillStyle = player.color;
-        this.ctx.fill();
+      if (!player.finished) {
+        this.collisionManager.checkWallCollision(player, this.canvas.width, this.canvas.height);
+        this.obstacleManager.checkCollisions(player);
       }
     });
+
+    // Appliquer les boosters et téléporteurs
+    this.boosterManager.applyBoosters(this.players);
+    this.teleporterManager.applyTeleporters(this.players);
   }
 
-  // Affichage de l'écran de victoire
-  showVictoryScreen() {
-    this.container.innerHTML = `
-      <div style="text-align: center; color: white; font-size: 24px; margin-top: 50px;">
-        <h1>🎉 Victoire 🎉</h1>
-        <p>Vous avez terminé tous les niveaux !</p>
-        <button onclick="window.location.reload()">Rejouer</button>
-      </div>
-    `;
+  render() {
+    this.renderer.render();
   }
 
-  // Boucle principale du jeu
   loop() {
     this.update();
     this.render();
     requestAnimationFrame(() => this.loop());
+  }
+
+  showVictoryScreen() {
+    const victoryScreen = new VictoryScreen(this.players);
+    victoryScreen.show();
   }
 }

@@ -1,7 +1,12 @@
 {
-    "start": { "x": 100, "y": 100 },
-    "goal": { "x": 700, "y": 300, "radius": 15 },
-    "obstacles": [
-      { "x": 400, "y": 300, "radius": 20 }
-    ]
-  }  
+  "start": { "x": 100, "y": 500 },
+  "goal": { "x": 700, "y": 100, "radius": 20 },
+  "obstacles": [
+    { "x": 300, "y": 300, "radius": 50 },
+    { "x": 500, "y": 200, "radius": 40 },
+    { "x": 500, "y": 400, "radius": 40 }
+  ],
+  "boosters": [],
+  "teleporters": [],
+  "terrains": []
+}
