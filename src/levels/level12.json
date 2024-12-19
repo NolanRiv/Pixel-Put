@@ -9,8 +9,8 @@
     { "x": 300, "y": 400, "radius": 20, "boostFactor": 2.2 }
   ],
   "teleporters": [
-    { "entry": { "x": 100, "y": 100 }, "exit": { "x": 700, "y": 500 } },
-    { "entry": { "x": 300, "y": 200 }, "exit": { "x": 600, "y": 400 } }
+    { "entry": { "x": 100, "y": 100, "radius": 15 }, "exit": { "x": 700, "y": 500 } },
+    { "entry": { "x": 300, "y": 200, "radius": 15 }, "exit": { "x": 600, "y": 400 } }
   ],
   "terrains": [
     {

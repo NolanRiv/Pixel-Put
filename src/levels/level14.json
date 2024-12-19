@@ -11,7 +11,7 @@
     { "x": 600, "y": 450, "radius": 20, "boostFactor": 1.8 }
   ],
   "teleporters": [
-    { "entry": { "x": 200, "y": 150 }, "exit": { "x": 650, "y": 450 } }
+    { "entry": { "x": 200, "y": 150, "radius": 15 }, "exit": { "x": 650, "y": 450 } }
   ],
   "terrains": [
     {
@@ -26,7 +26,7 @@
       "y": 400,
       "width": 200,
       "height": 100,
-      "type": "wind"
+      "type": "sand"
     }
   ]
 }
